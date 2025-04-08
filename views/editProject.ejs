@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Project</title>
+  <link href="/css/main.css" rel="stylesheet" />
+</head>
+
+<body>
+  <%- include('partials/navbar', { page: "" }) %>
+
+    <div class="container mx-auto p-6">
+
+      <div class="hero bg-base-200 rounded-lg p-6 mt-8">
+        <div class="hero-content text-center">
+          <div class="max-w-md">
+            <h1 class="text-5xl font-bold">Edit Project</h1>
+            <p class="py-6">
+              <%= project.title %>
+            </p>
+          </div>
+        </div>
+      </div>
+      <br>
+      <form action="/solutions/editProject" method="POST" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+          <input type="hidden" name="id" value="<%= project.id %>" />
+
+          <div>
+            <label for="title" class="block font-medium my-2">Title</label>
+            <input type="text" id="title" name="title" value="<%= project.title %>" required
+              class="w-full p-2 border rounded" />
+          </div>
+
+          <div>
+            <label for="feature_img_url" class="block font-medium my-2">Feature Image URL</label>
+            <input type="url" id="feature_img_url" name="feature_img_url" value="<%= project.feature_img_url %>"
+              placeholder="" required class="w-full p-2 border rounded" />
+          </div>
+
+          <div>
+            <label for="sector_id" class="block font-medium my-2">Sector</label>
+            <select id="sector_id" name="sector_id" required class="w-full p-2 border rounded">
+              <% sectors.forEach(sector=>{ %>
+                <option <%=(project.sector_id==sector.id) ? "selected" : "" %> value="<%= sector.id %>">
+                    <%= sector.sector_name %>
+                </option>
+                <% }) %>
+            </select>
+          </div>
+
+          <div>
+            <label for="intro_short" class="block font-medium my-2">Intro</label>
+            <textarea id="intro_short" name="intro_short" placeholder="" required
+              class="w-full p-2 border rounded h-40"><%= project.intro_short %></textarea>
+          </div>
+
+          <div>
+            <label for="summary_short" class="block font-medium my-2">Summary</label>
+            <textarea id="summary_short" name="summary_short" placeholder="" required
+              class="w-full p-2 border rounded h-40"><%= project.summary_short %></textarea>
+          </div>
+
+          <div>
+            <label for="impact" class="block font-medium my-2">Impact</label>
+            <textarea id="impact" name="impact" placeholder="" required 
+              class="w-full p-2 border rounded h-40"><%= project.impact %></textarea>
+          </div>
+
+          <div>
+            <label for="url" class="block font-medium my-2">Original Source URL</label>
+            <input id="url" type="url" name="original_source_url" value="<%= project.original_source_url %>" placeholder="" required
+              class="w-full p-2 border rounded" />
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <button type="submit" class="btn btn-primary mr-2">Update Project</button>
+          <a href="/solutions/deleteProject/<%= project.id %>" class="btn btn-error">Delete Project</a>
+      </div>
+      </form>
+    </div>
+
+</body>
+
+</html>

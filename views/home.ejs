@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Climate Solutions</title>
+  <link href="/css/main.css" rel="stylesheet" />
+</head>
+
+<body>
+  <%- include('partials/navbar', { page: "/" }) %>
+
+  <div class="container mx-auto">
+    <div class="hero min-h-screen rounded-lg" style="
+          background-image: url('/images/bg.png');
+        ">
+      <div class="hero-content text-center p-10">
+        <div class="max-w-md">
+          <h1 class="text-5xl font-bold">Explore Projects</h1>
+
+          <p class="py-6">
+            Browse our current collection of modern solutions to help fight
+            Climate Change.
+          </p>
+          <a href="/solutions/projects" class="btn btn-primary">Explore Now</a>
+        </div>
+      </div>
+    </div>
+
+    <br />
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div>
+        <div class="card bg-base-100 shadow-xl">
+          <figure>
+            <img class="w-full"
+              src="https://drawdown.org/sites/default/files/solutions/solution_biomass01.jpg"
+              alt="Biomass Power" />
+          </figure>
+          <div class="card-body">
+            <h2 class="card-title">Biomass Power</h2>
+            <p>
+              Biomass feedstock can replace fossil fuels for generating heat and electricity. Perennial biomass offers a “bridge” to a clean, renewable energy future.
+            </p>
+            <div class="card-actions justify-end py-6">
+              <a href="/solutions/projects/4" class="btn btn-primary">More Information</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card bg-base-100 shadow-xl">
+          <figure>
+            <img class="w-full"
+              src="https://drawdown.org/sites/default/files/solutions/solution_farmlandirrigation01.jpg"
+              alt="Farm Irrigation Efficiency" />
+          </figure>
+          <div class="card-body">
+            <h2 class="card-title">Farm Irrigation Efficiency</h2>
+            <p>
+              Drip and sprinkler irrigation, among other practices and technologies, make farm water use less energy/fuel intensive and conserve significant amounts of freshwater.
+            </p>
+            <div class="card-actions justify-end py-6">
+              <a href="/solutions/projects/5" class="btn btn-primary">More Information</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card bg-base-100 shadow-xl">
+          <figure>
+            <img class="w-full"
+              src="https://drawdown.org/sites/default/files/solutions/Solution_Bamboo01.jpg"
+              alt="Bamboo Production" />
+          </figure>
+          <div class="card-body">
+            <h2 class="card-title">Bamboo Production</h2>
+            <p>
+              Bamboo rapidly sequesters carbon in biomass and soil and can thrive on degraded lands. Long-lived bamboo products can store carbon over time.
+            </p>
+            <div class="card-actions justify-end py-6">
+              <a href="/solutions/projects/6" class="btn btn-primary">More Information</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

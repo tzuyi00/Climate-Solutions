@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About</title>
+  <link href="/css/main.css" rel="stylesheet" />
+</head>
+
+<body class="bg-gray-100">
+  <%- include('partials/navbar', { page: "/about" }) %>
+
+  <div class="container mx-auto">
+
+    <div class="hero bg-base-200 rounded-lg p-6 mt-8">
+      <div class="hero-content text-center ">
+        <div class="max-w-md">
+          <h1 class="text-5xl font-bold">About me</h1>
+
+          <p class="py-6">Everything you want to know about me - the front-end developer.</p>
+
+        </div>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div>
+        <img class="w-full rounded-lg" src="/images/about.jpg" alt="profile">
+      </div>
+      <div class="prose">
+        <p>Hello everyone, my name is Liz, and I'm from Taiwan. Currently, I am studying Computer Programming and Analysis at Seneca College in Toronto, Canada. This is my first time studying abroad, and I am still adjusting to this entirely new lifestyle, so I appreciate any guidance and support from all of you.</p>
+        <br>
+        <p>I have two years of experience in front-end development and web design, where I primarily worked with the Angular framework. Here, I am eager to expand my knowledge in back-end development and databases to enhance my overall skills in software engineering. I believe that gaining a well-rounded understanding of both front-end and back-end technologies is essential for my growth in this field.</p>
+        <br>
+        <p>I am excited to learn from my professors and fellow students, and I look forward to collaborating on projects and sharing ideas. Thank you for welcoming me into this community, and I hope to make the most of my time here at Seneca College!</p>
+      </div>
+
+    </div>
+
+  </div>
+</body>
+
+</html>

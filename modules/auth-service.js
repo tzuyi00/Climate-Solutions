@@ -94,6 +94,7 @@ function checkUser(userData) {
               user.loginHistory.pop();
             }
 
+            // Add new login history to the beginning
             user.loginHistory.unshift({
               dateTime: (new Date()).toString(),
               userAgent: userData.userAgent

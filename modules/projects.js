@@ -60,6 +60,7 @@ const Project = sequelize.define('Project', {
 });
 
 // Define association
+// Project has a foreign key 'sector_id' that references Sector
 Project.belongsTo(Sector, { foreignKey: 'sector_id' });
 
 // // Load initial data for bulk insert
@@ -98,7 +99,14 @@ function initialize() {
 
 // 2. Return all projects
 function getAllProjects() {
-  return Project.findAll({ include: [Sector] });
+  // Returns all projects with their associated sectors, ordered by sector_id then by project id
+  return Project.findAll({
+    include: [Sector],
+    order: [
+      ['sector_id', 'ASC'], // order by sector_id
+      ['id', 'ASC']         // order by project id
+    ]
+  });
 }
 
 // 3. Return a specific project by its ID

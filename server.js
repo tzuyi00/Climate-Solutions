@@ -23,7 +23,7 @@ const port = 3000;
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Serve static files
+// Serve static files(css, images)
 app.use(express.static('public'));
 
 // Middleware to read form data
@@ -34,13 +34,14 @@ app.use(
   clientSessions({
     cookieName: 'session', // this is the object name that will be added to 'req'
     secret: 'fkeRw9gkmadDejs5Dggkl', // this should be a long un-guessable string.
-    duration: 2 * 60 * 1000, // duration of the session in milliseconds (2 minutes)
-    activeDuration: 1000 * 60, // the session will be extended auto when user is active (1 minute)
+    duration: 1000 * 60 * 60, // duration of the session in milliseconds (1 hour)
+    activeDuration: 1000 * 60 * 60, // the session will be extended auto when user is active (1 hour)
   })
 );
 
 // Middleware to set session data
 app.use((req, res, next) => {
+  // This will allow us to access session data in our EJS templates
   res.locals.session = req.session;
   next();
 });
@@ -71,7 +72,8 @@ async function initializeServer() {
 
     app.get("/solutions/projects", async (req, res) => {
       try {
-        const { sector } = req.query;
+        // If sector is provided, filter projects by sector, otherwise get all projects
+        const { sector } = req.query; // Get the sector from query parameters
         let projects;
 
         if (sector) {
@@ -80,12 +82,13 @@ async function initializeServer() {
           projects = await projectData.getAllProjects();
         }
 
+        // page name & the data passed to the view
         res.render("projects", {
           projects: projects,
           page: "/solutions/projects",
         });
       } catch (err) {
-        res.status(500).render("404", { message: "Failed to retrieve projects" });
+        res.status(500).render("404", { message: "Failed to retrieve projects", page: "/404" });
       }
     });
 
@@ -95,15 +98,15 @@ async function initializeServer() {
         const project = await projectData.getProjectById(projectId);
 
         if (!project) {
-          return res.status(404).render("404", { message: `Project ID ${projectId} not found.` });
+          return res.status(404).render("404", { message: `Project ID ${projectId} not found.`, page: "/404" });
         }
 
         res.render("project", {
           project: project,
-          page: "",
+          page: "/solutions/projects/:id",
         });
       } catch (err) {
-        res.status(500).render("404", { message: "Unable to find requested project." });
+        res.status(500).render("404", { message: "Unable to find requested project.", page: "/404" });
       }
     });
 
@@ -111,9 +114,13 @@ async function initializeServer() {
     app.get("/solutions/addProject", ensureLogin, async (req, res) => {
       try {
         const sectors = await projectData.getAllSectors();
-        res.render("addProject", { sectors: sectors });
+
+        res.render("addProject", { 
+          sectors: sectors, 
+          page: "/solutions/addProject" 
+        });
       } catch (err) {
-        res.render("500", { message: `Unable to load form: ${err.message}` });
+        res.render("500", { message: `Unable to load form: ${err.message}`, page: "/500" });
       }
     });
 
@@ -122,7 +129,7 @@ async function initializeServer() {
         await projectData.addProject(req.body);
         res.redirect("/solutions/projects");
       } catch (err) {
-        res.render("500", { message: `I'm sorry, but we have encountered the following error: ${err}` });
+        res.render("500", { message: `I'm sorry, but we have encountered the following error: ${err}`, page: "/500" });
       }
     });
 
@@ -135,10 +142,11 @@ async function initializeServer() {
     
         res.render("editProject", {
           project: project,
-          sectors: sectors
+          sectors: sectors,
+          page: "/solutions/editProject/:id"
         });
       } catch (err) {
-        res.status(404).render("404", { message: err.message });
+        res.status(404).render("404", { message: err.message, page: "/404" });
       }
     });
 
@@ -148,7 +156,7 @@ async function initializeServer() {
         await projectData.editProject(id, req.body);
         res.redirect("/solutions/projects");
       } catch (err) {
-        res.render("500", { message: `I'm sorry, but we have encountered the following error: ${err}` });
+        res.render("500", { message: `I'm sorry, but we have encountered the following error: ${err}`, page: "/500" });
       }
     });
 
@@ -160,7 +168,8 @@ async function initializeServer() {
         res.redirect("/solutions/projects");
       } catch (err) {
         res.render("500", {
-          message: `I'm sorry, but we have encountered the following error: ${err}`
+          message: `I'm sorry, but we have encountered the following error: ${err}`,
+          page: "/500"
         });
       }
     });
@@ -172,6 +181,29 @@ async function initializeServer() {
         userName: "",
         page: "/login"
       });
+    });
+
+    // Login user input
+    app.post("/login", async (req, res) => {
+      req.body.userAgent = req.get("User-Agent"); // Get Client Information put into history
+
+      try {
+        const user = await authData.checkUser(req.body);
+
+        req.session.user = {
+          userName: user.userName,
+          email: user.email,
+          loginHistory: user.loginHistory
+        };
+
+        res.redirect("/solutions/projects");
+      } catch (err) {
+        res.render("login", {
+          errorMessage: err,
+          userName: req.body.userName,
+          page: "/login"
+        });
+      }
     });
 
     // Register page
@@ -204,29 +236,6 @@ async function initializeServer() {
       }
     });
 
-    // Login user input
-    app.post("/login", async (req, res) => {
-      req.body.userAgent = req.get("User-Agent");
-    
-      try {
-        const user = await authData.checkUser(req.body);
-    
-        req.session.user = {
-          userName: user.userName,
-          email: user.email,
-          loginHistory: user.loginHistory
-        };
-    
-        res.redirect("/solutions/projects");
-      } catch (err) {
-        res.render("login", {
-          errorMessage: err,
-          userName: req.body.userName,
-          page: "/login"
-        });
-      }
-    });
-
     // Logout
     app.get("/logout", (req, res) => {
       req.session.reset();
@@ -238,11 +247,10 @@ async function initializeServer() {
       res.render("userHistory", {
         page: "/userHistory"
       });
-    });    
-    
-    
+    });
+
     app.use((req, res) => {
-      res.status(404).render("404", { message: "I'm sorry, we're unable to find what you're looking for." });
+      res.status(404).render("404", { message: "I'm sorry, we're unable to find what you're looking for.", page: "/404" });
     });
 
     // Start the server
